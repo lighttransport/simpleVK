@@ -1,0 +1,13 @@
+CMakeCache.txt
+CMakeLists.txt
+CMakeFiles
+cmake_install.cmake
+cmake_uninstall.cmake
+
+*.sln
+*.vcxproj*
+*.VC*
+x64
+Debug
+Release
+*.dir
