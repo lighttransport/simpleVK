@@ -1,6 +1,6 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8)
 
 file(GLOB FILES *.cpp)
 
-ADD_EXECUTABLE(Triangle ${FILES})
-TARGET_LINK_LIBRARIES(Triangle ${GLFW_LIBRARIES} ${Vulkan_LIBRARIES})
+add_executable(Triangle ${FILES})
+target_link_libraries(Triangle ${GLFW_STATIC_LIBRARIES} ${Vulkan_LIBRARIES})

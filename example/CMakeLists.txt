@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+cmake_minimum_required(VERSION 2.8)
 
-ADD_SUBDIRECTORY(triangle)
-ADD_SUBDIRECTORY(nn)
+add_subdirectory(triangle)
+add_subdirectory(nn)
