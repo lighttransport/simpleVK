@@ -32,7 +32,7 @@ void simpleVK::Pipeline::createShader(vk::ShaderModule & shader)
 {
 	//load ShaderCode
 	std::vector<uint8_t> code;
-	readBinaryFile("comp.spv", code);
+	readBinaryFile("nn.spv", code);
 
 	//init VertexShaderModuleCreateInfo
 	vk::ShaderModuleCreateInfo shaderInfo;
