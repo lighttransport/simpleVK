@@ -12,7 +12,7 @@ class Device;
 //Resources, create and read and write resources (e.g.: Buffer, Image)
 class Resources
 {
-	Device& device_;
+	std::shared_ptr<Device> device_;
 
 	vk::DeviceSize inputSize_;
 	vk::Buffer inputBuffer_;
@@ -25,6 +25,10 @@ class Resources
 	vk::DeviceSize outputSize_;
 	vk::Buffer outputBuffer_;
 	vk::DeviceMemory outputMemory_;
+
+	vk::DescriptorSet set_;
+	vk::DescriptorSetLayout setLayout_;
+	vk::DescriptorPool pool_;
 
 	void createInputBuffer(vk::Buffer& inputBuffer);
 	void createWeightBuffer(vk::Buffer& weightBuffer);
@@ -42,7 +46,7 @@ class Resources
 		const vk::DeviceSize& size,
 		uint32_t binding);
 public:
-	explicit Resources(Device& device);
+	explicit Resources(std::shared_ptr<Device> device);
 	~Resources();
 
 	const vk::Buffer& getInputBuffer() const;

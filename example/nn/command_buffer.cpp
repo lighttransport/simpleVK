@@ -6,7 +6,7 @@
 
 void simpleVK::neuralNetwork::CommandBuffer::getQueue(vk::Queue & queue)
 {
-	queue = device_.getDevice().getQueue(0, 0);
+	queue = device_->getDevice().getQueue(0, 0);
 }
 
 void simpleVK::neuralNetwork::CommandBuffer::createCommandPool(vk::CommandPool & cmdPool)
@@ -17,7 +17,7 @@ void simpleVK::neuralNetwork::CommandBuffer::createCommandPool(vk::CommandPool &
 	cmdPoolInfo.setFlags(vk::CommandPoolCreateFlagBits::eResetCommandBuffer);
 
 	//create CommandPool
-	cmdPool = device_.getDevice().createCommandPool(cmdPoolInfo);
+	cmdPool = device_->getDevice().createCommandPool(cmdPoolInfo);
 
 }
 
@@ -30,10 +30,13 @@ void simpleVK::neuralNetwork::CommandBuffer::createCommandBuffer(const vk::Comma
   cmdBufAllocateInfo.setCommandBufferCount(1);
 
   //allocate CommandBuffer
-  cmdBuffer = (device_.getDevice().allocateCommandBuffers(cmdBufAllocateInfo))[0];
+  cmdBuffer = (device_->getDevice().allocateCommandBuffers(cmdBufAllocateInfo))[0];
 }
 
-simpleVK::neuralNetwork::CommandBuffer::CommandBuffer(Device & device, Resources & resources, Pipeline & pipeline):
+simpleVK::neuralNetwork::CommandBuffer::CommandBuffer(
+	std::shared_ptr<Device> device,
+	std::shared_ptr<Resources> resources,
+	std::shared_ptr<Pipeline> pipeline):
 	device_(device),
 	resources_(resources),
 	pipeline_(pipeline)
@@ -45,8 +48,8 @@ simpleVK::neuralNetwork::CommandBuffer::CommandBuffer(Device & device, Resources
 
 simpleVK::neuralNetwork::CommandBuffer::~CommandBuffer()
 {
-	device_.getDevice().freeCommandBuffers(cmdPool_,1,&cmdBuffer_);
-	device_.getDevice().destroyCommandPool(cmdPool_);
+	device_->getDevice().freeCommandBuffers(cmdPool_,1,&cmdBuffer_);
+	device_->getDevice().destroyCommandPool(cmdPool_);
 }
 
 const vk::CommandBuffer & simpleVK::neuralNetwork::CommandBuffer::getCommandBuffers() const
@@ -95,10 +98,10 @@ void simpleVK::neuralNetwork::CommandBuffer::dispach() const
 
 
   //bind Pipeline
-  cmdBuffer_.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline_.getPipeline());
+  cmdBuffer_.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline_->getPipeline());
 
   //bind DescriptorSet
-  cmdBuffer_.bindDescriptorSets(vk::PipelineBindPoint::eCompute, pipeline_.getPipelineLayout(),0,resources_.getDescriptorSet(),{});
+  cmdBuffer_.bindDescriptorSets(vk::PipelineBindPoint::eCompute, pipeline_->getPipelineLayout(),0,resources_->getDescriptorSet(),{});
 
   //draw
   cmdBuffer_.dispatch(1,1,1);
@@ -116,5 +119,5 @@ void simpleVK::neuralNetwork::CommandBuffer::dispach() const
   queue_.waitIdle();
 
   //wait Device
-  device_.getDevice().waitIdle();
+  device_->getDevice().waitIdle();
 }

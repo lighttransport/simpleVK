@@ -9,7 +9,7 @@ void simpleVK::neuralNetwork::Resources::createInputBuffer(vk::Buffer & inputBuf
 	vk::BufferCreateInfo createInfo;
 	createInfo.setSize(inputSize_);
 	createInfo.setUsage(vk::BufferUsageFlagBits::eStorageBuffer);
-	inputBuffer = device_.getDevice().createBuffer(createInfo);
+	inputBuffer = device_->getDevice().createBuffer(createInfo);
 
 }
 
@@ -18,7 +18,7 @@ void simpleVK::neuralNetwork::Resources::createWeightBuffer(vk::Buffer & weightB
 	vk::BufferCreateInfo createInfo;
 	createInfo.setSize(weightSize_);
 	createInfo.setUsage(vk::BufferUsageFlagBits::eStorageBuffer);
-	weightBuffer = device_.getDevice().createBuffer(createInfo);
+	weightBuffer = device_->getDevice().createBuffer(createInfo);
 }
 
 void simpleVK::neuralNetwork::Resources::createOutputBuffer(vk::Buffer & outputBuffer)
@@ -26,7 +26,7 @@ void simpleVK::neuralNetwork::Resources::createOutputBuffer(vk::Buffer & outputB
 	vk::BufferCreateInfo createInfo;
 	createInfo.setSize(outputSize_);
 	createInfo.setUsage(vk::BufferUsageFlagBits::eStorageBuffer);
-	outputBuffer = device_.getDevice().createBuffer(createInfo);
+	outputBuffer = device_->getDevice().createBuffer(createInfo);
 
 }
 
@@ -34,11 +34,11 @@ void simpleVK::neuralNetwork::Resources::createAndBindMemory(const vk::Buffer & 
 {
 	//get PhysicalDeviceMemoryProperties
 	vk::PhysicalDeviceMemoryProperties memoryProperties;
-	device_.getPhysicalDevice().getMemoryProperties(&memoryProperties);
+	device_->getPhysicalDevice().getMemoryProperties(&memoryProperties);
 
 	//get MemoryRequirements
 	vk::MemoryRequirements req;
-	device_.getDevice().getBufferMemoryRequirements(buffer, &req);
+	device_->getDevice().getBufferMemoryRequirements(buffer, &req);
 
 	uint32_t memoryTypeBits = req.memoryTypeBits;
 	uint32_t memoryTypeIndex = 0;
@@ -60,9 +60,9 @@ void simpleVK::neuralNetwork::Resources::createAndBindMemory(const vk::Buffer & 
 	memoryInfo.setAllocationSize(req.size);
 
 	//allocate VertexMemory
-	deviceMemory = device_.getDevice().allocateMemory(memoryInfo);
+	deviceMemory = device_->getDevice().allocateMemory(memoryInfo);
 	//bind VertexMemory to VertexBuffer
-	device_.getDevice().bindBufferMemory(buffer, deviceMemory, 0);
+	device_->getDevice().bindBufferMemory(buffer, deviceMemory, 0);
 }
 
 void simpleVK::neuralNetwork::Resources::createDescriptorSetLayout(vk::DescriptorSetLayout & setLayout)
@@ -85,7 +85,7 @@ void simpleVK::neuralNetwork::Resources::createDescriptorSetLayout(vk::Descripto
 	createInfo.setBindingCount(3);
 	createInfo.setPBindings(setLayoutBindings.data());
 
-	setLayout = device_.getDevice().createDescriptorSetLayout(createInfo);
+	setLayout = device_->getDevice().createDescriptorSetLayout(createInfo);
 }
 
 void simpleVK::neuralNetwork::Resources::createDescriptorPool(vk::DescriptorPool& pool)
@@ -103,7 +103,7 @@ void simpleVK::neuralNetwork::Resources::createDescriptorPool(vk::DescriptorPool
   createInfo.setPPoolSizes(poolSizes.data());
   createInfo.setPoolSizeCount(poolSizes.size());
   
-  pool = device_.getDevice().createDescriptorPool(createInfo);
+  pool = device_->getDevice().createDescriptorPool(createInfo);
 }
 
 void simpleVK::neuralNetwork::Resources::createDescriptorSet(
@@ -115,7 +115,7 @@ void simpleVK::neuralNetwork::Resources::createDescriptorSet(
   allocateInfo.setPSetLayouts(&setLayout);
   allocateInfo.setDescriptorSetCount(1);
   allocateInfo.setDescriptorPool(pool);
-  set = device_.getDevice().allocateDescriptorSets(allocateInfo)[0];
+  set = device_->getDevice().allocateDescriptorSets(allocateInfo)[0];
 }
 
 void simpleVK::neuralNetwork::Resources::writeDescriptorSet(
@@ -140,10 +140,10 @@ void simpleVK::neuralNetwork::Resources::writeDescriptorSet(
   writeSet.setPBufferInfo(&bufferInfo);
 
   //update DescriptorSet
-  device_.getDevice().updateDescriptorSets(writeSet,{});
+  device_->getDevice().updateDescriptorSets(writeSet,{});
 }
 
-simpleVK::neuralNetwork::Resources::Resources(Device & device) :
+simpleVK::neuralNetwork::Resources::Resources(std::shared_ptr<Device>device) :
 	device_(device),
 	inputSize_(sizeof(float[4*4])),
 	weightSize_(sizeof(float[(4*4)*(2*2)])),
@@ -170,14 +170,14 @@ simpleVK::neuralNetwork::Resources::Resources(Device & device) :
 
 simpleVK::neuralNetwork::Resources::~Resources()
 {
-	device_.getDevice().destroyBuffer(inputBuffer_);
-	device_.getDevice().freeMemory(inputMemory_);
+	device_->getDevice().destroyBuffer(inputBuffer_);
+	device_->getDevice().freeMemory(inputMemory_);
 
-	device_.getDevice().destroyBuffer(weightBuffer_);
-	device_.getDevice().freeMemory(weightMemory_);
+	device_->getDevice().destroyBuffer(weightBuffer_);
+	device_->getDevice().freeMemory(weightMemory_);
 
-	device_.getDevice().destroyBuffer(outputBuffer_);
-	device_.getDevice().freeMemory(outputMemory_);
+	device_->getDevice().destroyBuffer(outputBuffer_);
+	device_->getDevice().freeMemory(outputMemory_);
 }
 
 const vk::Buffer& simpleVK::neuralNetwork::Resources::getInputBuffer() const
@@ -209,13 +209,13 @@ void simpleVK::neuralNetwork::Resources::writeInputBuffer(const std::vector<floa
 {
 	void* mappedMemory = nullptr;
 
-	mappedMemory = device_.getDevice().mapMemory(inputMemory_, 0, inputSize_);
+	mappedMemory = device_->getDevice().mapMemory(inputMemory_, 0, inputSize_);
 
 	//copy Vertexes
 	memcpy(mappedMemory,input.data(),inputSize_);
 
 	//unmap VertexMemory
-	device_.getDevice().unmapMemory(inputMemory_);
+	device_->getDevice().unmapMemory(inputMemory_);
 
 }
 
@@ -223,13 +223,13 @@ void simpleVK::neuralNetwork::Resources::writeWeightBuffer(const std::vector<flo
 {
 	void* mappedMemory = nullptr;
 
-	mappedMemory = device_.getDevice().mapMemory(weightMemory_, 0, weightSize_);
+	mappedMemory = device_->getDevice().mapMemory(weightMemory_, 0, weightSize_);
 
 	//copy Vertexes
 	memcpy(mappedMemory,weight.data(),weightSize_);
 
 	//unmap VertexMemory
-	device_.getDevice().unmapMemory(weightMemory_);
+	device_->getDevice().unmapMemory(weightMemory_);
 
 }
 
@@ -237,13 +237,13 @@ void simpleVK::neuralNetwork::Resources::readOutputBuffer(std::vector<float>& ou
 {
 	void* mappedMemory = nullptr;
 
-	mappedMemory = device_.getDevice().mapMemory(outputMemory_, 0, outputSize_);
+	mappedMemory = device_->getDevice().mapMemory(outputMemory_, 0, outputSize_);
 
 	//copy Vertexes
 	memcpy(output.data(),mappedMemory,outputSize_);
 
 	//unmap VertexMemory
-	device_.getDevice().unmapMemory(outputMemory_);
+	device_->getDevice().unmapMemory(outputMemory_);
 
 }
 

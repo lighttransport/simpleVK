@@ -12,9 +12,9 @@ class Pipeline;
 
 class CommandBuffer
 {
-	Device& device_;
-	Resources& resources_;
-	Pipeline& pipeline_;
+	std::shared_ptr<Device> device_;
+	std::shared_ptr<Resources> resources_;
+	std::shared_ptr<Pipeline> pipeline_;
 
 	vk::Queue queue_;
 	vk::CommandPool cmdPool_;
@@ -26,7 +26,10 @@ class CommandBuffer
 		const vk::CommandPool& cmdPool,
 		vk::CommandBuffer& cmdBuffer);
 public:
-	explicit CommandBuffer(Device& device, Resources& resources, Pipeline& pipeline);
+	explicit CommandBuffer(
+		std::shared_ptr<Device> device,
+		std::shared_ptr<Resources> resources,
+		std::shared_ptr<Pipeline> pipeline);
 	~CommandBuffer();
 
 	const vk::CommandBuffer& getCommandBuffers() const;

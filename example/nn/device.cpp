@@ -15,13 +15,13 @@ void simpleVK::neuralNetwork::Device::createInstance(vk::Instance& instance)
 	appInfo.setApiVersion(VK_API_VERSION_1_0);
 
 	std::vector<const char*> extensions;
-  unsigned int glfwExtensionsCount;
-  const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionsCount);
-  extensions.resize(glfwExtensionsCount);
-  for(size_t i=0;i<glfwExtensionsCount;++i)
-  {
-    extensions[i]=glfwExtensions[i];
-  }
+	unsigned int glfwExtensionsCount;
+	const char** glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionsCount);
+	extensions.resize(glfwExtensionsCount);
+	for (size_t i = 0; i < glfwExtensionsCount; ++i)
+	{
+		extensions[i] = glfwExtensions[i];
+	}
 
 	//std::vector<const char*> layers;
 	//layers.push_back("VK_LAYER_LUNARG_param_checker");
@@ -72,7 +72,7 @@ void simpleVK::neuralNetwork::Device::createDevice(const vk::PhysicalDevice & ph
 
 	//init DeviceQueueInfo
 	vk::DeviceQueueCreateInfo queueInfo;
-	float queueProperties = 0.0f ;
+	float queueProperties = 0.0f;
 	queueInfo.setQueueFamilyIndex(familyIndex);
 	queueInfo.setQueueCount(1);
 	queueInfo.setPQueuePriorities(&queueProperties);

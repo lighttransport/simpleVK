@@ -21,17 +21,22 @@ void simpleVK::neuralNetwork::Shader::readBinary(const std::string & fileName, s
 	return; //TODO implement exception
 }
 
-void simpleVK::neuralNetwork::Shader::createShaderModule(const std::vector<int8_t>& code, vk::ShaderModule& shaderModule)
+void simpleVK::neuralNetwork::Shader::createShaderModule(
+	const std::vector<int8_t>& code,
+	vk::ShaderModule& shaderModule)
 {
 	//init VertexShaderModuleCreateInfo
 	vk::ShaderModuleCreateInfo shaderInfo;
 	shaderInfo.setFlags(vk::ShaderModuleCreateFlagBits());
 	shaderInfo.setCodeSize(code.size());
 	shaderInfo.setPCode(reinterpret_cast<const uint32_t*>(code.data()));
-	shaderModule = device_.getDevice().createShaderModule(shaderInfo);
+	shaderModule = device_->getDevice().createShaderModule(shaderInfo);
 }
 
-simpleVK::neuralNetwork::Shader::Shader(Device& device, std::string fileName) : device_(device)
+simpleVK::neuralNetwork::Shader::Shader(
+	std::shared_ptr<Device> device,
+	std::string fileName) :
+	device_(device)
 {
 	std::vector<int8_t> code;
 	readBinary(fileName, code);
@@ -40,7 +45,7 @@ simpleVK::neuralNetwork::Shader::Shader(Device& device, std::string fileName) : 
 
 simpleVK::neuralNetwork::Shader::~Shader()
 {
-	device_.getDevice().destroyShaderModule(shaderModule_);
+	device_->getDevice().destroyShaderModule(shaderModule_);
 }
 
 const vk::ShaderModule& simpleVK::neuralNetwork::Shader::getShaderModule()

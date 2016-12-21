@@ -2,6 +2,8 @@
 #include<vulkan/vulkan.hpp>
 #include<vector>
 
+#include<memory>
+
 namespace simpleVK
 {
 namespace neuralNetwork
@@ -12,9 +14,9 @@ class Shader;
 
 class Pipeline
 {
-	Device& device_;
-	Resources& resources_;
-	Shader& shader_;
+	std::shared_ptr<Device> device_;
+	std::shared_ptr<Resources> resources_;
+	std::shared_ptr<Shader> shader_;
 
 	vk::DescriptorSetLayout setLayout_;
 	vk::DescriptorPool pool_;
@@ -34,7 +36,10 @@ class Pipeline
 		const vk::ShaderModule& shader,
 		vk::Pipeline& pipeline);
 public:
-	explicit Pipeline(Device& device, Resources& resources, Shader& shader);
+	explicit Pipeline(
+		std::shared_ptr<Device> device, 
+		std::shared_ptr<Resources> resources,
+		std::shared_ptr<Shader> shader);
 	~Pipeline();
 
 	const vk::PipelineLayout& getPipelineLayout() const;
