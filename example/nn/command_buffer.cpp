@@ -4,12 +4,12 @@
 #include"resources.h"
 #include"pipeline.h"
 
-void simpleVK::CommandBuffer::getQueue(vk::Queue & queue)
+void simpleVK::neuralNetwork::CommandBuffer::getQueue(vk::Queue & queue)
 {
 	queue = device_.getDevice().getQueue(0, 0);
 }
 
-void simpleVK::CommandBuffer::createCommandPool(vk::CommandPool & cmdPool)
+void simpleVK::neuralNetwork::CommandBuffer::createCommandPool(vk::CommandPool & cmdPool)
 {
 	//init CommandPoolCreateInfo
 	vk::CommandPoolCreateInfo cmdPoolInfo;
@@ -21,7 +21,7 @@ void simpleVK::CommandBuffer::createCommandPool(vk::CommandPool & cmdPool)
 
 }
 
-void simpleVK::CommandBuffer::createCommandBuffer(const vk::CommandPool & cmdPool, vk::CommandBuffer& cmdBuffer)
+void simpleVK::neuralNetwork::CommandBuffer::createCommandBuffer(const vk::CommandPool & cmdPool, vk::CommandBuffer& cmdBuffer)
 {
   //init CommandBufferAllocateInfo
   vk::CommandBufferAllocateInfo cmdBufAllocateInfo;
@@ -33,7 +33,7 @@ void simpleVK::CommandBuffer::createCommandBuffer(const vk::CommandPool & cmdPoo
   cmdBuffer = (device_.getDevice().allocateCommandBuffers(cmdBufAllocateInfo))[0];
 }
 
-simpleVK::CommandBuffer::CommandBuffer(Device & device, Resources & resources, Pipeline & pipeline):
+simpleVK::neuralNetwork::CommandBuffer::CommandBuffer(Device & device, Resources & resources, Pipeline & pipeline):
 	device_(device),
 	resources_(resources),
 	pipeline_(pipeline)
@@ -43,18 +43,18 @@ simpleVK::CommandBuffer::CommandBuffer(Device & device, Resources & resources, P
 	createCommandBuffer(cmdPool_,cmdBuffer_);
 }
 
-simpleVK::CommandBuffer::~CommandBuffer()
+simpleVK::neuralNetwork::CommandBuffer::~CommandBuffer()
 {
 	device_.getDevice().freeCommandBuffers(cmdPool_,1,&cmdBuffer_);
 	device_.getDevice().destroyCommandPool(cmdPool_);
 }
 
-const vk::CommandBuffer & simpleVK::CommandBuffer::getCommandBuffers() const
+const vk::CommandBuffer & simpleVK::neuralNetwork::CommandBuffer::getCommandBuffers() const
 {
 	return cmdBuffer_;
 }
 
-void simpleVK::CommandBuffer::dispach() const
+void simpleVK::neuralNetwork::CommandBuffer::dispach() const
 {
   //init CommandBufferInheritanceInfo
   vk::CommandBufferInheritanceInfo inheritanceInfo;

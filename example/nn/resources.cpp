@@ -4,7 +4,7 @@
 #include"device.h"
 
 
-void simpleVK::Resources::createInputBuffer(vk::Buffer & inputBuffer)
+void simpleVK::neuralNetwork::Resources::createInputBuffer(vk::Buffer & inputBuffer)
 {
 	vk::BufferCreateInfo createInfo;
 	createInfo.setSize(inputSize_);
@@ -13,7 +13,7 @@ void simpleVK::Resources::createInputBuffer(vk::Buffer & inputBuffer)
 
 }
 
-void simpleVK::Resources::createWeightBuffer(vk::Buffer & weightBuffer)
+void simpleVK::neuralNetwork::Resources::createWeightBuffer(vk::Buffer & weightBuffer)
 {
 	vk::BufferCreateInfo createInfo;
 	createInfo.setSize(weightSize_);
@@ -21,7 +21,7 @@ void simpleVK::Resources::createWeightBuffer(vk::Buffer & weightBuffer)
 	weightBuffer = device_.getDevice().createBuffer(createInfo);
 }
 
-void simpleVK::Resources::createOutputBuffer(vk::Buffer & outputBuffer)
+void simpleVK::neuralNetwork::Resources::createOutputBuffer(vk::Buffer & outputBuffer)
 {
 	vk::BufferCreateInfo createInfo;
 	createInfo.setSize(outputSize_);
@@ -30,7 +30,7 @@ void simpleVK::Resources::createOutputBuffer(vk::Buffer & outputBuffer)
 
 }
 
-void simpleVK::Resources::createAndBindMemory(const vk::Buffer & buffer, vk::DeviceMemory & deviceMemory)
+void simpleVK::neuralNetwork::Resources::createAndBindMemory(const vk::Buffer & buffer, vk::DeviceMemory & deviceMemory)
 {
 	//get PhysicalDeviceMemoryProperties
 	vk::PhysicalDeviceMemoryProperties memoryProperties;
@@ -62,10 +62,10 @@ void simpleVK::Resources::createAndBindMemory(const vk::Buffer & buffer, vk::Dev
 	//allocate VertexMemory
 	deviceMemory = device_.getDevice().allocateMemory(memoryInfo);
 	//bind VertexMemory to VertexBuffer
-	device_.getDevice().bindBufferMemory(buffer,deviceMemory,0);
+	device_.getDevice().bindBufferMemory(buffer, deviceMemory, 0);
 }
 
-void simpleVK::Resources::createDescriptorSetLayout(vk::DescriptorSetLayout & setLayout)
+void simpleVK::neuralNetwork::Resources::createDescriptorSetLayout(vk::DescriptorSetLayout & setLayout)
 {
 	std::vector<vk::DescriptorSetLayoutBinding> setLayoutBindings(3);
 	setLayoutBindings[0].setBinding(0);
@@ -80,7 +80,7 @@ void simpleVK::Resources::createDescriptorSetLayout(vk::DescriptorSetLayout & se
 	setLayoutBindings[2].setDescriptorType(vk::DescriptorType::eStorageBuffer);
 	setLayoutBindings[2].setDescriptorCount(1);
 	setLayoutBindings[2].setStageFlags(vk::ShaderStageFlagBits::eCompute);
-	
+
 	vk::DescriptorSetLayoutCreateInfo createInfo;
 	createInfo.setBindingCount(3);
 	createInfo.setPBindings(setLayoutBindings.data());
@@ -88,7 +88,7 @@ void simpleVK::Resources::createDescriptorSetLayout(vk::DescriptorSetLayout & se
 	setLayout = device_.getDevice().createDescriptorSetLayout(createInfo);
 }
 
-void simpleVK::Resources::createDescriptorPool(vk::DescriptorPool& pool)
+void simpleVK::neuralNetwork::Resources::createDescriptorPool(vk::DescriptorPool& pool)
 {
   std::vector<vk::DescriptorPoolSize> poolSizes(3);
   poolSizes[0].setType(vk::DescriptorType::eStorageBuffer);
@@ -106,7 +106,7 @@ void simpleVK::Resources::createDescriptorPool(vk::DescriptorPool& pool)
   pool = device_.getDevice().createDescriptorPool(createInfo);
 }
 
-void simpleVK::Resources::createDescriptorSet(
+void simpleVK::neuralNetwork::Resources::createDescriptorSet(
     const vk::DescriptorSetLayout& setLayout,
     const vk::DescriptorPool& pool,
     vk::DescriptorSet& set)
@@ -118,7 +118,7 @@ void simpleVK::Resources::createDescriptorSet(
   set = device_.getDevice().allocateDescriptorSets(allocateInfo)[0];
 }
 
-void simpleVK::Resources::writeDescriptorSet(
+void simpleVK::neuralNetwork::Resources::writeDescriptorSet(
 	const vk::Buffer& buffer,
 	const vk::DescriptorSet& set,
 	const vk::DeviceSize& size,
@@ -143,7 +143,7 @@ void simpleVK::Resources::writeDescriptorSet(
   device_.getDevice().updateDescriptorSets(writeSet,{});
 }
 
-simpleVK::Resources::Resources(Device & device) :
+simpleVK::neuralNetwork::Resources::Resources(Device & device) :
 	device_(device),
 	inputSize_(sizeof(float[4*4])),
 	weightSize_(sizeof(float[(4*4)*(2*2)])),
@@ -168,7 +168,7 @@ simpleVK::Resources::Resources(Device & device) :
 
 }
 
-simpleVK::Resources::~Resources()
+simpleVK::neuralNetwork::Resources::~Resources()
 {
 	device_.getDevice().destroyBuffer(inputBuffer_);
 	device_.getDevice().freeMemory(inputMemory_);
@@ -180,32 +180,32 @@ simpleVK::Resources::~Resources()
 	device_.getDevice().freeMemory(outputMemory_);
 }
 
-const vk::Buffer& simpleVK::Resources::getInputBuffer() const
+const vk::Buffer& simpleVK::neuralNetwork::Resources::getInputBuffer() const
 {
 	return inputBuffer_;
 }
 
-const vk::Buffer& simpleVK::Resources::getWeightBuffer() const
+const vk::Buffer& simpleVK::neuralNetwork::Resources::getWeightBuffer() const
 {
 	return weightBuffer_;
 }
 
-const vk::Buffer& simpleVK::Resources::getOutputBuffer() const
+const vk::Buffer& simpleVK::neuralNetwork::Resources::getOutputBuffer() const
 {
 	return outputBuffer_;
 }
 
-const vk::DescriptorSetLayout& simpleVK::Resources::getDescriptorSetLayout() const
+const vk::DescriptorSetLayout& simpleVK::neuralNetwork::Resources::getDescriptorSetLayout() const
 {
   return setLayout_;
 }
 
-const vk::DescriptorSet& simpleVK::Resources::getDescriptorSet() const
+const vk::DescriptorSet& simpleVK::neuralNetwork::Resources::getDescriptorSet() const
 {
   return set_;
 }
 
-void simpleVK::Resources::writeInputBuffer(const std::vector<float>& input)
+void simpleVK::neuralNetwork::Resources::writeInputBuffer(const std::vector<float>& input)
 {
 	void* mappedMemory = nullptr;
 
@@ -219,7 +219,7 @@ void simpleVK::Resources::writeInputBuffer(const std::vector<float>& input)
 
 }
 
-void simpleVK::Resources::writeWeightBuffer(const std::vector<float>& weight)
+void simpleVK::neuralNetwork::Resources::writeWeightBuffer(const std::vector<float>& weight)
 {
 	void* mappedMemory = nullptr;
 
@@ -233,7 +233,7 @@ void simpleVK::Resources::writeWeightBuffer(const std::vector<float>& weight)
 
 }
 
-void simpleVK::Resources::readOutputBuffer(std::vector<float>& output)
+void simpleVK::neuralNetwork::Resources::readOutputBuffer(std::vector<float>& output)
 {
 	void* mappedMemory = nullptr;
 

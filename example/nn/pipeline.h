@@ -4,34 +4,41 @@
 
 namespace simpleVK
 {
-	class Device;
-	class Resources;
-	class Shader;
+namespace neuralNetwork
+{
+class Device;
+class Resources;
+class Shader;
 
-	class Pipeline
-	{
-		Device& device_;
-		Resources& resources_;
-		Shader& shader_;
+class Pipeline
+{
+	Device& device_;
+	Resources& resources_;
+	Shader& shader_;
 
-		vk::DescriptorSet descriptorSet_;
-		vk::PipelineCache pipelineCache_;
-		vk::PipelineLayout pipelineLayout_;
-		vk::Pipeline pipeline_;
+	vk::DescriptorSetLayout setLayout_;
+	vk::DescriptorPool pool_;
+	vk::DescriptorSet set_;
 
-		void createDescriptorSet(vk::DescriptorSet&);
-		void createPipelineCache(vk::PipelineCache& pipelineCache);
-		void createPipelineLayout(vk::PipelineLayout& pipelineLayout);
-		void createPipeline(
-			const vk::PipelineCache& pipelineCache,
-			const vk::PipelineLayout& pipelineLayout,
-			const vk::ShaderModule& shader,
-			vk::Pipeline& pipeline);
-	public:
-		explicit Pipeline(Device& device,Resources& resources,Shader& shader);
-		~Pipeline();
+	vk::DescriptorSet descriptorSet_;
+	vk::PipelineCache pipelineCache_;
+	vk::PipelineLayout pipelineLayout_;
+	vk::Pipeline pipeline_;
 
-		const vk::PipelineLayout& getPipelineLayout() const;
-		const vk::Pipeline& getPipeline() const;
-	};
+	void createDescriptorSet(vk::DescriptorSet&);
+	void createPipelineCache(vk::PipelineCache& pipelineCache);
+	void createPipelineLayout(vk::PipelineLayout& pipelineLayout);
+	void createPipeline(
+		const vk::PipelineCache& pipelineCache,
+		const vk::PipelineLayout& pipelineLayout,
+		const vk::ShaderModule& shader,
+		vk::Pipeline& pipeline);
+public:
+	explicit Pipeline(Device& device, Resources& resources, Shader& shader);
+	~Pipeline();
+
+	const vk::PipelineLayout& getPipelineLayout() const;
+	const vk::Pipeline& getPipeline() const;
+};
+}
 }

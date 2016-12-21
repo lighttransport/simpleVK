@@ -7,7 +7,7 @@
 #include"resources.h"
 #include"shader.h"
 
-void simpleVK::Pipeline::createPipelineCache(vk::PipelineCache & pipelineCache)
+void simpleVK::neuralNetwork::Pipeline::createPipelineCache(vk::PipelineCache & pipelineCache)
 {
         //init PipelineCacheCreateInfo
         vk::PipelineCacheCreateInfo cacheInfo;
@@ -16,7 +16,7 @@ void simpleVK::Pipeline::createPipelineCache(vk::PipelineCache & pipelineCache)
 		pipelineCache = device_.getDevice().createPipelineCache(cacheInfo);
 }
 
-void simpleVK::Pipeline::createPipelineLayout(vk::PipelineLayout & pipelineLayout)
+void simpleVK::neuralNetwork::Pipeline::createPipelineLayout(vk::PipelineLayout & pipelineLayout)
 {
         //init PipelineLayoutCreateInfo
         vk::PipelineLayoutCreateInfo layoutInfo;
@@ -29,7 +29,7 @@ void simpleVK::Pipeline::createPipelineLayout(vk::PipelineLayout & pipelineLayou
 		pipelineLayout = device_.getDevice().createPipelineLayout(layoutInfo);
 }
 
-void simpleVK::Pipeline::createPipeline(const vk::PipelineCache & pipelineCache, const vk::PipelineLayout & pipelineLayout, const vk::ShaderModule & shader, vk::Pipeline & pipeline)
+void simpleVK::neuralNetwork::Pipeline::createPipeline(const vk::PipelineCache & pipelineCache, const vk::PipelineLayout & pipelineLayout, const vk::ShaderModule & shader, vk::Pipeline & pipeline)
 {
   //init PipelineShaderStageCreateInfo
   vk::PipelineShaderStageCreateInfo stageInfo;
@@ -47,7 +47,7 @@ void simpleVK::Pipeline::createPipeline(const vk::PipelineCache & pipelineCache,
   pipeline = device_.getDevice().createComputePipeline(pipelineCache,createInfo);
 }
 
-simpleVK::Pipeline::Pipeline(Device & device,Resources & resources,Shader & shader):
+simpleVK::neuralNetwork::Pipeline::Pipeline(Device & device,Resources & resources,Shader & shader):
 	device_(device),
 	resources_(resources),
 	shader_(shader)
@@ -57,19 +57,19 @@ simpleVK::Pipeline::Pipeline(Device & device,Resources & resources,Shader & shad
 	createPipeline(pipelineCache_, pipelineLayout_,shader_.getShaderModule(), pipeline_);
 }
 
-simpleVK::Pipeline::~Pipeline()
+simpleVK::neuralNetwork::Pipeline::~Pipeline()
 {
 	device_.getDevice().destroyPipeline(pipeline_);
 	device_.getDevice().destroyPipelineLayout(pipelineLayout_);
 	device_.getDevice().destroyPipelineCache(pipelineCache_);
 }
 
-const vk::PipelineLayout & simpleVK::Pipeline::getPipelineLayout() const
+const vk::PipelineLayout & simpleVK::neuralNetwork::Pipeline::getPipelineLayout() const
 {
 	return pipelineLayout_;
 }
 
-const vk::Pipeline & simpleVK::Pipeline::getPipeline() const
+const vk::Pipeline & simpleVK::neuralNetwork::Pipeline::getPipeline() const
 {
 	return pipeline_;
 }

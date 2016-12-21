@@ -9,15 +9,15 @@ int main()
 {
 	std::vector<float> input{ 0.0f,1.0f,2.0f,3.0f,4.0f,5.0f,6.0f,7.0f,8.0f,9.0f,10.0f,11.0f,12.0f,13.0f,14.0f,15.0f };
 	std::vector<float> output(4);
-	simpleVK::Device device;
+	simpleVK::neuralNetwork::Device device;
 	{
-		simpleVK::Resources resources(device);
-		simpleVK::Shader shader(device, "nn.spv");
+		simpleVK::neuralNetwork::Resources resources(device);
+		simpleVK::neuralNetwork::Shader shader(device, "nn.spv");
 		{
-			simpleVK::Pipeline pipeline(device, resources,shader);
+			simpleVK::neuralNetwork::Pipeline pipeline(device, resources,shader);
 			{
 				resources.writeInputBuffer(input);
-				simpleVK::CommandBuffer commandBuffer(device, resources, pipeline);
+				simpleVK::neuralNetwork::CommandBuffer commandBuffer(device, resources, pipeline);
 				commandBuffer.dispach();
 				resources.readOutputBuffer(output);
 			}

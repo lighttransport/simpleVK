@@ -4,7 +4,7 @@
 #include<vector>
 #include<GLFW/glfw3.h>
 
-void simpleVK::Device::createInstance(vk::Instance& instance)
+void simpleVK::neuralNetwork::Device::createInstance(vk::Instance& instance)
 {
 	//init ApplicationInfo
 	vk::ApplicationInfo appInfo;
@@ -42,7 +42,7 @@ void simpleVK::Device::createInstance(vk::Instance& instance)
 	//create Instance
 	instance = vk::createInstance(instInfo);
 }
-void simpleVK::Device::getPhysDevice(const vk::Instance& instance, vk::PhysicalDevice & physDevice)
+void simpleVK::neuralNetwork::Device::getPhysDevice(const vk::Instance& instance, vk::PhysicalDevice & physDevice)
 {
 	//get PhysicalDevices
 	std::vector<vk::PhysicalDevice> physDevices;
@@ -50,7 +50,7 @@ void simpleVK::Device::getPhysDevice(const vk::Instance& instance, vk::PhysicalD
 
 	physDevice = physDevices[0];
 }
-void simpleVK::Device::createDevice(const vk::PhysicalDevice & physDevice, vk::Device & device)
+void simpleVK::neuralNetwork::Device::createDevice(const vk::PhysicalDevice & physDevice, vk::Device & device)
 {
 	//create Devices
 
@@ -102,26 +102,26 @@ void simpleVK::Device::createDevice(const vk::PhysicalDevice & physDevice, vk::D
 	physDevice.createDevice(&deviceInfo, nullptr, &device);
 	return;
 }
-simpleVK::Device::Device()
+simpleVK::neuralNetwork::Device::Device()
 {
 	createInstance(instance_);
 	getPhysDevice(instance_, physDevice_);
 	createDevice(physDevice_, device_);
 }
-simpleVK::Device::~Device()
+simpleVK::neuralNetwork::Device::~Device()
 {
 	device_.destroy();
 	instance_.destroy();
 }
-const vk::Instance& simpleVK::Device::getInstance() const
+const vk::Instance& simpleVK::neuralNetwork::Device::getInstance() const
 {
 	return instance_;
 }
-const vk::Device& simpleVK::Device::getDevice() const
+const vk::Device& simpleVK::neuralNetwork::Device::getDevice() const
 {
 	return device_;
 }
-const vk::PhysicalDevice& simpleVK::Device::getPhysicalDevice() const
+const vk::PhysicalDevice& simpleVK::neuralNetwork::Device::getPhysicalDevice() const
 {
 	return physDevice_;
 }
