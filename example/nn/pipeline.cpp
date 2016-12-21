@@ -5,6 +5,7 @@
 #include"utility.h"
 #include"device.h"
 #include"resources.h"
+#include"shader.h"
 
 void simpleVK::Pipeline::createPipelineCache(vk::PipelineCache & pipelineCache)
 {
@@ -28,22 +29,6 @@ void simpleVK::Pipeline::createPipelineLayout(vk::PipelineLayout & pipelineLayou
 		pipelineLayout = device_.getDevice().createPipelineLayout(layoutInfo);
 }
 
-void simpleVK::Pipeline::createShader(vk::ShaderModule & shader)
-{
-	//load ShaderCode
-	std::vector<uint8_t> code;
-	readBinaryFile("nn.spv", code);
-
-	//init VertexShaderModuleCreateInfo
-	vk::ShaderModuleCreateInfo shaderInfo;
-	shaderInfo.setFlags(vk::ShaderModuleCreateFlagBits());
-	shaderInfo.setCodeSize(code.size());
-	shaderInfo.setPCode(reinterpret_cast<uint32_t*>(code.data()));
-
-	//create VertexShader
-	shader = device_.getDevice().createShaderModule(shaderInfo);
-}
-
 void simpleVK::Pipeline::createPipeline(const vk::PipelineCache & pipelineCache, const vk::PipelineLayout & pipelineLayout, const vk::ShaderModule & shader, vk::Pipeline & pipeline)
 {
   //init PipelineShaderStageCreateInfo
@@ -62,20 +47,19 @@ void simpleVK::Pipeline::createPipeline(const vk::PipelineCache & pipelineCache,
   pipeline = device_.getDevice().createComputePipeline(pipelineCache,createInfo);
 }
 
-simpleVK::Pipeline::Pipeline(Device & device,Resources & resources):
+simpleVK::Pipeline::Pipeline(Device & device,Resources & resources,Shader & shader):
 	device_(device),
-	resources_(resources)
+	resources_(resources),
+	shader_(shader)
 {
 	createPipelineCache(pipelineCache_);
 	createPipelineLayout(pipelineLayout_);
-	createShader(shaderModule_);
-	createPipeline(pipelineCache_, pipelineLayout_, shaderModule_, pipeline_);
+	createPipeline(pipelineCache_, pipelineLayout_,shader_.getShaderModule(), pipeline_);
 }
 
 simpleVK::Pipeline::~Pipeline()
 {
 	device_.getDevice().destroyPipeline(pipeline_);
-	device_.getDevice().destroyShaderModule(shaderModule_);
 	device_.getDevice().destroyPipelineLayout(pipelineLayout_);
 	device_.getDevice().destroyPipelineCache(pipelineCache_);
 }

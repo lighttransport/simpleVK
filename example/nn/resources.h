@@ -36,9 +36,13 @@ namespace simpleVK
         const vk::DescriptorSetLayout& setLayout,
         const vk::DescriptorPool& pool,
         vk::DescriptorSet& set);
-    void writeDescriptorSet(const vk::Buffer& buffer,const vk::DeviceSize& size,uint32_t binding);
+    void writeDescriptorSet(
+		const vk::Buffer& buffer,
+		const vk::DescriptorSet& set,
+		const vk::DeviceSize& size,
+		uint32_t binding);
 	public:
-		Resources(Device& device);
+		explicit Resources(Device& device);
 		~Resources();
 
 		const vk::Buffer& getInputBuffer() const;

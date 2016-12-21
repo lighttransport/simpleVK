@@ -24,7 +24,7 @@ namespace simpleVK
 			const vk::CommandPool& cmdPool,
 			vk::CommandBuffer& cmdBuffer);
 	public:
-		CommandBuffer(Device& device, Resources& resources, Pipeline& pipeline);
+		explicit CommandBuffer(Device& device, Resources& resources, Pipeline& pipeline);
 		~CommandBuffer();
 
 		const vk::CommandBuffer& getCommandBuffers() const;

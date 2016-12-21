@@ -1,31 +1,34 @@
 #pragma once
 #include<vulkan/vulkan.hpp>
+#include<vector>
 
 namespace simpleVK
 {
 	class Device;
 	class Resources;
+	class Shader;
 
 	class Pipeline
 	{
 		Device& device_;
 		Resources& resources_;
+		Shader& shader_;
 
+		vk::DescriptorSet descriptorSet_;
 		vk::PipelineCache pipelineCache_;
 		vk::PipelineLayout pipelineLayout_;
-		vk::ShaderModule shaderModule_;
 		vk::Pipeline pipeline_;
 
+		void createDescriptorSet(vk::DescriptorSet&);
 		void createPipelineCache(vk::PipelineCache& pipelineCache);
 		void createPipelineLayout(vk::PipelineLayout& pipelineLayout);
-		void createShader(vk::ShaderModule& shader);
 		void createPipeline(
 			const vk::PipelineCache& pipelineCache,
 			const vk::PipelineLayout& pipelineLayout,
 			const vk::ShaderModule& shader,
 			vk::Pipeline& pipeline);
 	public:
-		Pipeline(Device& device,Resources& resources);
+		explicit Pipeline(Device& device,Resources& resources,Shader& shader);
 		~Pipeline();
 
 		const vk::PipelineLayout& getPipelineLayout() const;

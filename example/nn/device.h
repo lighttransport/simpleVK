@@ -14,7 +14,7 @@ namespace simpleVK
 		void getPhysDevice(const vk::Instance& instance,vk::PhysicalDevice& physDevice);
 		void createDevice(const vk::PhysicalDevice& physDevice,vk::Device& device);
 	public:
-		Device();
+		explicit Device();
 		~Device();
 		const vk::Instance& getInstance() const;
 		const vk::Device& getDevice() const;

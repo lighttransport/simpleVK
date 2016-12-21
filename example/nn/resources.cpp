@@ -118,7 +118,11 @@ void simpleVK::Resources::createDescriptorSet(
   set = device_.getDevice().allocateDescriptorSets(allocateInfo)[0];
 }
 
-void simpleVK::Resources::writeDescriptorSet(const vk::Buffer& buffer,const vk::DeviceSize& size,uint32_t binding)
+void simpleVK::Resources::writeDescriptorSet(
+	const vk::Buffer& buffer,
+	const vk::DescriptorSet& set,
+	const vk::DeviceSize& size,
+	uint32_t binding)
 {
   //init DescriptorBufferInfo
   vk::DescriptorBufferInfo bufferInfo;
@@ -154,13 +158,13 @@ simpleVK::Resources::Resources(Device & device) :
 	createOutputBuffer(outputBuffer_);
 	createAndBindMemory(outputBuffer_, outputMemory_);
 
-  createDescriptorSetLayout(setLayout_);
-  createDescriptorPool(pool_);
-  createDescriptorSet(setLayout_,pool_,set_);
+	createDescriptorSetLayout(setLayout_);
+	createDescriptorPool(pool_);
+	createDescriptorSet(setLayout_, pool_, set_);
 
-  writeDescriptorSet(inputBuffer_,inputSize_,0);
-  writeDescriptorSet(weightBuffer_,weightSize_,1);
-  writeDescriptorSet(outputBuffer_,outputSize_,2);
+	writeDescriptorSet(inputBuffer_, set_, inputSize_, 0);
+	writeDescriptorSet(weightBuffer_, set_, weightSize_, 1);
+	writeDescriptorSet(outputBuffer_, set_, outputSize_, 2);
 
 }
 

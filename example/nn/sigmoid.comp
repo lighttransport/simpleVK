@@ -1,0 +1,11 @@
+#version 450
+
+layout (local_size_x = 16) in;
+layout (binding = 0) readonly buffer InputBlock {float[16] input_value;};
+layout (binding = 1) writeonly buffer OutputBlock {float[16] output_value;};
+layout (binding = 2) uniform UniformBlock {float gain;};
+
+void main()
+{	
+	output_value[gl_LocalInvocationID.x] = (atan(input_value[gl_LocalInvocationID.x]/2*gain)+1)/2;
+}
