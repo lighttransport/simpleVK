@@ -1,8 +1,7 @@
 #pragma once
-#include<vulkan/vulkan.hpp>
 #include<vector>
-
 #include<memory>
+#include<vulkan/vulkan.hpp>
 
 #include"resources.h"
 

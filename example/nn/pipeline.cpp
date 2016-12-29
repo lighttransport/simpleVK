@@ -1,6 +1,5 @@
 #include "pipeline.h"
 
-#include"utility.h"
 #include"device.h"
 #include"resources.h"
 #include"shader.h"
@@ -35,7 +34,7 @@ void simpleVK::neuralNetwork::Pipeline::createSigmoidPipeline(
 	constants[3] = outputSize.y;
 	reinterpret_cast<float&>(constants[4]) = gain;
 
-	std::vector<vk::SpecializationMapEntry> constantEntries(4);
+	std::vector<vk::SpecializationMapEntry> constantEntries(5);
 	constantEntries[0].setConstantID(0);
 	constantEntries[0].setSize(sizeof(uint32_t));
 	constantEntries[0].setOffset(0);

@@ -9,7 +9,7 @@
 
 int main()
 {
-	std::vector<simpleVK::neuralNetwork::LayerSize> layerSizes{ {4,4}, {2,2}, {2,2}, {2,2}, {2,2} };
+	std::vector<simpleVK::neuralNetwork::LayerSize> layerSizes{ {4,4}, {2,2}, {2,2}, {2,2}, {2,2}};
 	std::vector<float> input(layerSizes.front().y*layerSizes.front().x);
 	std::vector<float> output(layerSizes.back().y*layerSizes.back().x);
 	std::vector<float> weight(

@@ -1,5 +1,6 @@
 #include"device.h"
 
+#include<iostream>
 #include<vector>
 #include<GLFW/glfw3.h>
 
@@ -34,10 +35,6 @@ void simpleVK::neuralNetwork::Device::createInstance(vk::Instance& instance)
 
 	std::vector<const char*> layers;
 	layers.push_back("VK_LAYER_LUNARG_standard_validation");
-	//layers.push_back("VK_LAYER_LUNARG_param_checker");
-	//layers.push_back("VK_LAYER_LUNARG_swapchain");
-	//layers.push_back("VK_LAYER_LUNARG_mem_tracker");
-	//layers.push_back("VK_LAYER_GOOGLE_unique_objects");
 
 	//init InstanceCreateInfo
 	vk::InstanceCreateInfo instInfo;
@@ -69,7 +66,9 @@ void simpleVK::neuralNetwork::Device::createDebugReportCallback(
 	vk::DebugReportCallbackCreateInfoEXT callbackInfo;
 	callbackInfo.setFlags(
 		vk::DebugReportFlagBitsEXT::eError |
-		vk::DebugReportFlagBitsEXT::eDebug);
+		vk::DebugReportFlagBitsEXT::eWarning |
+		vk::DebugReportFlagBitsEXT::ePerformanceWarning
+	);
 	callbackInfo.setPfnCallback(callback);
 	_vkCreateDebugReportCallbackEXT(
 		instance,

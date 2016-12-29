@@ -1,7 +1,5 @@
 #pragma once
 #include<vulkan/vulkan.hpp>
-#include"device.h"
-#include<iostream>
 
 namespace simpleVK
 {
