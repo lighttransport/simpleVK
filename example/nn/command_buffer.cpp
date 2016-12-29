@@ -70,41 +70,54 @@ void simpleVK::neuralNetwork::CommandBuffer::dispach() const
 
   //begin CommandBuffer
   cmdBuffer_.begin(&beginInfo);
+  for (int i = 0; i < pipeline_->getSigmoidPipelineCount();++i)
+  {
+	  //bind Pipeline
+	  cmdBuffer_.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline_->getWeightPipeline(i));
 
-  //pipelineBarrier
-  //vk::ImageMemoryBarrier barrier;
-  //barrier.setSrcAccessMask(vk::AccessFlagBits::eMemoryRead);
-  //barrier.setDstAccessMask(vk::AccessFlagBits::eColorAttachmentWrite);
-  //barrier.setOldLayout(vk::ImageLayout::ePresentSrcKHR);
-  //barrier.setNewLayout(vk::ImageLayout::eColorAttachmentOptimal);
-  //barrier.setSrcQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED);
-  //barrier.setDstQueueFamilyIndex(VK_QUEUE_FAMILY_IGNORED);
-  //barrier.subresourceRange.setAspectMask(vk::ImageAspectFlagBits::eColor);
-  //barrier.subresourceRange.setBaseMipLevel(0);
-  //barrier.subresourceRange.setLayerCount(1);
-  //barrier.subresourceRange.setBaseArrayLayer(0);
-  //barrier.subresourceRange.setLevelCount(1);
-  //barrier.setImage(m_swapchain->getVkImage(m_bufferIndex));
-  //m_cmdBuf->getVkCommandBuffer(1).pipelineBarrier(
-  //    vk::PipelineStageFlagBits::eAllCommands,
-  //    vk::PipelineStageFlagBits::eTopOfPipe,
-  //    vk::DependencyFlagBits(),
-  //    0,
-  //    nullptr,
-  //    0,
-  //    nullptr,
-  //    1,
-  //    &barrier);
+	  //bind DescriptorSet
+	  cmdBuffer_.bindDescriptorSets(
+		  vk::PipelineBindPoint::eCompute,
+		  pipeline_->getWeightPipelineLayout(),
+		  0,
+		  resources_->getWeightDescriptorSet(i), {});
 
+	  //draw
+	  cmdBuffer_.dispatch(1, 1, 1);
 
-  //bind Pipeline
-  cmdBuffer_.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline_->getPipeline());
+	  //memory barrier
+	  vk::BufferMemoryBarrier weightOutputBarrier = resources_->createBarrier(2*i+1);
+	  cmdBuffer_.pipelineBarrier(
+		  vk::PipelineStageFlagBits::eComputeShader,
+		  vk::PipelineStageFlagBits::eComputeShader,
+		  vk::DependencyFlagBits::eByRegion,
+		  nullptr,
+		  weightOutputBarrier,
+		  nullptr);
 
-  //bind DescriptorSet
-  cmdBuffer_.bindDescriptorSets(vk::PipelineBindPoint::eCompute, pipeline_->getPipelineLayout(),0,resources_->getDescriptorSet(),{});
+	  //bind Pipeline
+	  cmdBuffer_.bindPipeline(vk::PipelineBindPoint::eCompute, pipeline_->getSigmoidPipeline(i));
 
-  //draw
-  cmdBuffer_.dispatch(1,1,1);
+	  //bind DescriptorSet
+	  cmdBuffer_.bindDescriptorSets(
+		  vk::PipelineBindPoint::eCompute,
+		  pipeline_->getSigmoidPipelineLayout(),
+		  0,
+		  resources_->getSigmoidDescriptorSet(i), {});
+
+	  //draw
+	  cmdBuffer_.dispatch(1, 1, 1);
+
+	  //memory barrier
+	  vk::BufferMemoryBarrier sigmoidOutputBarrier = resources_->createBarrier(2*i+2);
+	  cmdBuffer_.pipelineBarrier(
+		  vk::PipelineStageFlagBits::eComputeShader,
+		  vk::PipelineStageFlagBits::eComputeShader,
+		  vk::DependencyFlagBits::eByRegion,
+		  nullptr,
+		  sigmoidOutputBarrier,
+		  nullptr);
+  }
 
   //end CommandBuffer
   cmdBuffer_.end();

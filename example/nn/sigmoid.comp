@@ -1,11 +1,27 @@
 #version 450
+layout (constant_id = 0) const int input_size_x = 32;
+layout (constant_id = 1) const int input_size_y = 32;
+layout (constant_id = 2) const int output_size_x = 16;
+layout (constant_id = 3) const int output_size_y = 16;
+layout (constant_id = 4) const float gain = 1.0f;
 
-layout (local_size_x = 16) in;
-layout (binding = 0) readonly buffer InputBlock {float[16] input_value;};
-layout (binding = 1) writeonly buffer OutputBlock {float[16] output_value;};
-layout (binding = 2) uniform UniformBlock {float gain;};
+layout (local_size_x_id = 2 ,local_size_y_id = 3) in;
+
+layout (binding = 0) readonly buffer InputBlock {float[input_size_y*input_size_x] input_value;};
+layout (binding = 1) writeonly buffer OutputBlock {float[output_size_y*output_size_x] output_value;};
+
+uint inputIndex(uint x,uint y)
+{
+	return input_size_x * y + x;
+}
+
+uint outputIndex(uint x,uint y)
+{
+	return output_size_x * y + x;
+}
 
 void main()
 {	
-	output_value[gl_LocalInvocationID.x] = (atan(input_value[gl_LocalInvocationID.x]/2*gain)+1)/2;
+	output_value[outputIndex(gl_GlobalInvocationID.x,gl_GlobalInvocationID.y)] = 
+		(atan(input_value[inputIndex(gl_GlobalInvocationID.x,gl_GlobalInvocationID.y)]/2*gain)+1)/2;
 }

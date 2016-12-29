@@ -2,7 +2,9 @@
 #include"device.h"
 #include<cstdio>
 
-void simpleVK::neuralNetwork::Shader::readBinary(const std::string & fileName, std::vector<int8_t>& code)
+void simpleVK::neuralNetwork::Shader::readBinary(
+	const std::string & fileName,
+	std::vector<int8_t>& code)
 {
 	long int size;
 	size_t retval;

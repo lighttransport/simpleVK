@@ -4,6 +4,8 @@
 
 #include<memory>
 
+#include"resources.h"
+
 namespace simpleVK
 {
 namespace neuralNetwork
@@ -16,34 +18,46 @@ class Pipeline
 {
 	std::shared_ptr<Device> device_;
 	std::shared_ptr<Resources> resources_;
-	std::shared_ptr<Shader> shader_;
+	std::shared_ptr<Shader> sigmoidShader_;
+	std::shared_ptr<Shader> weightShader_;
 
-	vk::DescriptorSetLayout setLayout_;
-	vk::DescriptorPool pool_;
-	vk::DescriptorSet set_;
+	vk::PipelineLayout sigmoidPipelineLayout_;
+	vk::PipelineLayout weightPipelineLayout_;
+	std::vector<vk::Pipeline> sigmoidPipelines_;
+	std::vector<vk::Pipeline> weightPipelines_;
 
-	vk::DescriptorSet descriptorSet_;
-	vk::PipelineCache pipelineCache_;
-	vk::PipelineLayout pipelineLayout_;
-	vk::Pipeline pipeline_;
+	void createPipelineLayout(
+		const vk::DescriptorSetLayout& layout,
+		vk::PipelineLayout& pipelineLayout);
 
-	void createDescriptorSet(vk::DescriptorSet&);
-	void createPipelineCache(vk::PipelineCache& pipelineCache);
-	void createPipelineLayout(vk::PipelineLayout& pipelineLayout);
-	void createPipeline(
-		const vk::PipelineCache& pipelineCache,
+	void createSigmoidPipeline(
 		const vk::PipelineLayout& pipelineLayout,
 		const vk::ShaderModule& shader,
+		LayerSize inputSize,
+		LayerSize outputSize,
+		float gain,
+		vk::Pipeline& pipeline);
+
+	void createWeightPipeline(
+		const vk::PipelineLayout& pipelineLayout,
+		const vk::ShaderModule& shader,
+		LayerSize inputSize,
+		LayerSize outputSize,
 		vk::Pipeline& pipeline);
 public:
 	explicit Pipeline(
 		std::shared_ptr<Device> device, 
 		std::shared_ptr<Resources> resources,
-		std::shared_ptr<Shader> shader);
+		std::shared_ptr<Shader> sigmoidShader,
+		std::shared_ptr<Shader> weightShader);
 	~Pipeline();
 
-	const vk::PipelineLayout& getPipelineLayout() const;
-	const vk::Pipeline& getPipeline() const;
+	const vk::PipelineLayout& getSigmoidPipelineLayout() const;
+	const vk::PipelineLayout& getWeightPipelineLayout() const;
+	size_t getSigmoidPipelineCount() const;
+	size_t getWeightPipelineCount() const;
+	const vk::Pipeline& getSigmoidPipeline(size_t index) const;
+	const vk::Pipeline& getWeightPipeline(size_t index) const;
 };
 }
 }

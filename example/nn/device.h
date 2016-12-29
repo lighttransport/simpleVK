@@ -1,5 +1,7 @@
 #pragma once
 #include<vulkan/vulkan.hpp>
+#include"device.h"
+#include<iostream>
 
 namespace simpleVK
 {
@@ -12,7 +14,17 @@ private:
 	vk::Device device_;
 	vk::PhysicalDevice physDevice_;
 
+	vk::DebugReportCallbackEXT reportCallback_;
+
+	PFN_vkCreateDebugReportCallbackEXT _vkCreateDebugReportCallbackEXT;
+	PFN_vkDebugReportMessageEXT _vkDebugReportMessageEXT;
+	PFN_vkDestroyDebugReportCallbackEXT _vkDestroyDebugReportCallbackEXT;
+
 	void createInstance(vk::Instance& instance);
+	void createDebugReportCallback(
+		const vk::Instance& instance,
+		const PFN_vkDebugReportCallbackEXT& callback,
+		vk::DebugReportCallbackEXT& reportCallback);
 	void getPhysDevice(const vk::Instance& instance, vk::PhysicalDevice& physDevice);
 	void createDevice(const vk::PhysicalDevice& physDevice, vk::Device& device);
 public:

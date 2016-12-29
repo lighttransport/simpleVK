@@ -1,0 +1,45 @@
+#version 450
+layout (constant_id = 0) const int input_size_x = 32;
+layout (constant_id = 1) const int input_size_y = 32;
+layout (constant_id = 2) const int output_size_x = 16;
+layout (constant_id = 3) const int output_size_y = 16;
+
+layout (local_size_x_id = 2 ,local_size_y_id = 3) in;
+
+layout (binding = 0) readonly buffer InputBlock {float[input_size_y*input_size_x] input_value;};
+layout (binding = 1) writeonly buffer OutputBlock {float[output_size_y*output_size_x] output_value;};
+layout (binding = 2) readonly buffer ParameterBlock{float[output_size_y*output_size_x*input_size_y*input_size_x] weight;};
+
+uint inputIndex(uint x,uint y)
+{
+	return input_size_x * y + x;
+}
+
+uint outputIndex(uint x,uint y)
+{
+	return output_size_x * y + x;
+}
+
+uint weightIndex(uint input_x,uint input_y,uint output_x,uint output_y)
+{
+	return input_size_x * input_size_y * output_size_x * output_y + 
+		   input_size_x * input_size_y * output_x +
+		   input_size_x * input_y +
+		   input_x;
+}
+
+void main()
+{
+	float result = 0;
+	for(int y=0;y<input_size_y;y++)
+	{
+		for(int x=0;x<input_size_x; x++)
+		{
+			result += 
+				weight[weightIndex(x,y,gl_LocalInvocationID.x,gl_LocalInvocationID.y)] * 
+				input_value[inputIndex(x,y)];
+		}
+	}
+	output_value[outputIndex(gl_LocalInvocationID.x,gl_LocalInvocationID.y)] = result;
+	//output_value[outputIndex(gl_LocalInvocationID.x,gl_LocalInvocationID.y)] = gl_WorkGroupSize.x;
+}
