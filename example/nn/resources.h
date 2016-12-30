@@ -93,7 +93,7 @@ public:
 	void readOutputBuffer(std::vector<float>& output);
 	void readLayerBuffer(size_t index, std::vector<float>& output);
 
-	vk::BufferMemoryBarrier createBarrier(size_t index);
+	vk::BufferMemoryBarrier createBarrierWriteToRead(size_t index);
 };
 
 }

@@ -98,29 +98,29 @@ void simpleVK::neuralNetwork::Resources::createDescriptorPool(
 	size_t weightSetsCount,
 	vk::DescriptorPool& pool)
 {
-  std::vector<vk::DescriptorPoolSize> poolSizes(1);
-  poolSizes[0].setType(vk::DescriptorType::eStorageBuffer);
-  poolSizes[0].setDescriptorCount(sigmoidSetsCount * 2 + weightSetsCount * 3);
+	std::vector<vk::DescriptorPoolSize> poolSizes(1);
+	poolSizes[0].setType(vk::DescriptorType::eStorageBuffer);
+	poolSizes[0].setDescriptorCount(sigmoidSetsCount * 2 + weightSetsCount * 3);
 
-  vk::DescriptorPoolCreateInfo createInfo;
-  createInfo.setMaxSets(sigmoidSetsCount + weightSetsCount);
-  createInfo.setPPoolSizes(poolSizes.data());
-  createInfo.setPoolSizeCount(poolSizes.size());
-  createInfo.setFlags(vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet);
-  
-  pool = device_->getDevice().createDescriptorPool(createInfo);
+	vk::DescriptorPoolCreateInfo createInfo;
+	createInfo.setMaxSets(sigmoidSetsCount + weightSetsCount);
+	createInfo.setPPoolSizes(poolSizes.data());
+	createInfo.setPoolSizeCount(poolSizes.size());
+	createInfo.setFlags(vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet);
+
+	pool = device_->getDevice().createDescriptorPool(createInfo);
 }
 
 void simpleVK::neuralNetwork::Resources::createDescriptorSet(
-    const vk::DescriptorSetLayout& setLayout,
-    const vk::DescriptorPool& pool,
-    vk::DescriptorSet& set)
+	const vk::DescriptorSetLayout& setLayout,
+	const vk::DescriptorPool& pool,
+	vk::DescriptorSet& set)
 {
-  vk::DescriptorSetAllocateInfo allocateInfo;
-  allocateInfo.setPSetLayouts(&setLayout);
-  allocateInfo.setDescriptorSetCount(1);
-  allocateInfo.setDescriptorPool(pool);
-  set = device_->getDevice().allocateDescriptorSets(allocateInfo)[0];
+	vk::DescriptorSetAllocateInfo allocateInfo;
+	allocateInfo.setPSetLayouts(&setLayout);
+	allocateInfo.setDescriptorSetCount(1);
+	allocateInfo.setDescriptorPool(pool);
+	set = device_->getDevice().allocateDescriptorSets(allocateInfo)[0];
 }
 
 void simpleVK::neuralNetwork::Resources::writeDescriptorSet(
@@ -130,23 +130,23 @@ void simpleVK::neuralNetwork::Resources::writeDescriptorSet(
 	vk::DescriptorType type,
 	uint32_t binding)
 {
-  //init DescriptorBufferInfo
-  vk::DescriptorBufferInfo bufferInfo;
-  bufferInfo.setBuffer(buffer);
-  bufferInfo.setOffset(0);
-  bufferInfo.setRange(size);
+	//init DescriptorBufferInfo
+	vk::DescriptorBufferInfo bufferInfo;
+	bufferInfo.setBuffer(buffer);
+	bufferInfo.setOffset(0);
+	bufferInfo.setRange(size);
 
-  //init WriteDescriptorSet
-  vk::WriteDescriptorSet writeSet;
-  writeSet.setDstSet(set);
-  writeSet.setDstBinding(binding);
-  writeSet.setDstArrayElement(0);
-  writeSet.setDescriptorCount(1);
-  writeSet.setDescriptorType(type);
-  writeSet.setPBufferInfo(&bufferInfo);
+	//init WriteDescriptorSet
+	vk::WriteDescriptorSet writeSet;
+	writeSet.setDstSet(set);
+	writeSet.setDstBinding(binding);
+	writeSet.setDstArrayElement(0);
+	writeSet.setDescriptorCount(1);
+	writeSet.setDescriptorType(type);
+	writeSet.setPBufferInfo(&bufferInfo);
 
-  //update DescriptorSet
-  device_->getDevice().updateDescriptorSets(writeSet,{});
+	//update DescriptorSet
+	device_->getDevice().updateDescriptorSets(writeSet, {});
 }
 
 simpleVK::neuralNetwork::Resources::Resources(
@@ -162,14 +162,14 @@ simpleVK::neuralNetwork::Resources::Resources(
 	{
 		layers_[i].size = layerSizes[i];
 		layers_[i].bufferSize = layers_[i].size.y * layers_[i].size.x * sizeof(float);
-		createBuffer(layers_[i].bufferSize,layers_[i].buffer);
-		createAndBindMemory(layers_[i].buffer,layers_[i].memory);
+		createBuffer(layers_[i].bufferSize, layers_[i].buffer);
+		createAndBindMemory(layers_[i].buffer, layers_[i].memory);
 	}
 
 	for (int i = 0; i < weights_.size(); ++i)
 	{
-		weights_[i].inputSize = layerSizes[i*2];
-		weights_[i].outputSize = layerSizes[i*2+1];
+		weights_[i].inputSize = layerSizes[i * 2];
+		weights_[i].outputSize = layerSizes[i * 2 + 1];
 		weights_[i].bufferSize
 			= weights_[i].outputSize.y * weights_[i].outputSize.x
 			* weights_[i].inputSize.y * weights_[i].inputSize.x
@@ -178,7 +178,7 @@ simpleVK::neuralNetwork::Resources::Resources(
 		createAndBindMemory(weights_[i].buffer, weights_[i].memory);
 	}
 
-	createDescriptorPool(sigmoidSets_.size(),weightSets_.size(),pool_);
+	createDescriptorPool(sigmoidSets_.size(), weightSets_.size(), pool_);
 
 	createSigmoidDescriptorSetLayout(sigmoidSetLayout_);
 	createWeightDescriptorSetLayout(weightSetLayout_);
@@ -188,14 +188,14 @@ simpleVK::neuralNetwork::Resources::Resources(
 		createDescriptorSet(weightSetLayout_, pool_, weightSets_[i]);
 
 		writeDescriptorSet(
-			layers_[2*i].buffer,
-			layers_[2*i].bufferSize,
+			layers_[2 * i].buffer,
+			layers_[2 * i].bufferSize,
 			weightSets_[i],
 			vk::DescriptorType::eStorageBuffer,
 			0);
 		writeDescriptorSet(
-			layers_[2*i+1].buffer, 
-			layers_[2*i+1].bufferSize,
+			layers_[2 * i + 1].buffer,
+			layers_[2 * i + 1].bufferSize,
 			weightSets_[i],
 			vk::DescriptorType::eStorageBuffer,
 			1);
@@ -212,14 +212,14 @@ simpleVK::neuralNetwork::Resources::Resources(
 		createDescriptorSet(sigmoidSetLayout_, pool_, sigmoidSets_[i]);
 
 		writeDescriptorSet(
-			layers_[i*2+1].buffer,
-			layers_[i*2+1].bufferSize,
+			layers_[i * 2 + 1].buffer,
+			layers_[i * 2 + 1].bufferSize,
 			sigmoidSets_[i],
 			vk::DescriptorType::eStorageBuffer,
 			0);
 		writeDescriptorSet(
-			layers_[i*2+2].buffer, 
-			layers_[i*2+2].bufferSize,
+			layers_[i * 2 + 2].buffer,
+			layers_[i * 2 + 2].bufferSize,
 			sigmoidSets_[i],
 			vk::DescriptorType::eStorageBuffer,
 			1);
@@ -267,7 +267,7 @@ size_t simpleVK::neuralNetwork::Resources::getWeightLayerCount() const
 	return weightSets_.size();
 }
 
-void simpleVK::neuralNetwork::Resources::getSigmoidLayerSize(size_t index,LayerSize& inputSize,LayerSize& outputSize)
+void simpleVK::neuralNetwork::Resources::getSigmoidLayerSize(size_t index, LayerSize& inputSize, LayerSize& outputSize)
 {
 	inputSize = layers_[index * 2 + 1].size;
 	outputSize = layers_[index * 2 + 2].size;
@@ -309,7 +309,7 @@ void simpleVK::neuralNetwork::Resources::writeInputBuffer(const std::vector<floa
 		0,
 		layers_.front().bufferSize);
 
-	memcpy(mappedMemory,input.data(),layers_.front().bufferSize);
+	memcpy(mappedMemory, input.data(), layers_.front().bufferSize);
 
 	device_->getDevice().unmapMemory(layers_.front().memory);
 
@@ -326,7 +326,7 @@ void simpleVK::neuralNetwork::Resources::writeWeightBuffer(
 		0,
 		weights_[index].bufferSize);
 
-	memcpy(mappedMemory,weight.data(),weights_[index].bufferSize);
+	memcpy(mappedMemory, weight.data(), weights_[index].bufferSize);
 
 	device_->getDevice().unmapMemory(weights_[index].memory);
 
@@ -342,7 +342,7 @@ void simpleVK::neuralNetwork::Resources::readOutputBuffer(std::vector<float>& ou
 		layers_.back().bufferSize);
 
 	//copy Vertexes
-	std::memcpy(output.data(),mappedMemory,layers_.back().bufferSize);
+	std::memcpy(output.data(), mappedMemory, layers_.back().bufferSize);
 
 	//unmap VertexMemory
 	device_->getDevice().unmapMemory(layers_.back().memory);
@@ -358,13 +358,13 @@ void simpleVK::neuralNetwork::Resources::readLayerBuffer(size_t index, std::vect
 		layers_[index].bufferSize);
 
 	//copy Vertexes
-	std::memcpy(output.data(),mappedMemory,layers_[index].bufferSize);
+	std::memcpy(output.data(), mappedMemory, layers_[index].bufferSize);
 
 	//unmap VertexMemory
 	device_->getDevice().unmapMemory(layers_[index].memory);
 }
 
-vk::BufferMemoryBarrier simpleVK::neuralNetwork::Resources::createBarrier(size_t index)
+vk::BufferMemoryBarrier simpleVK::neuralNetwork::Resources::createBarrierWriteToRead(size_t index)
 {
 	vk::BufferMemoryBarrier barrier;
 	barrier.setBuffer(layers_[index].buffer);
