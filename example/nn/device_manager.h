@@ -5,7 +5,7 @@ namespace simpleVK
 {
 namespace neuralNetwork
 {
-class Device
+class DeviceManager
 {
 private:
 	vk::Instance instance_;
@@ -26,8 +26,8 @@ private:
 	void getPhysDevice(const vk::Instance& instance, vk::PhysicalDevice& physDevice);
 	void createDevice(const vk::PhysicalDevice& physDevice, vk::Device& device);
 public:
-	explicit Device();
-	~Device();
+	explicit DeviceManager();
+	~DeviceManager();
 	const vk::Instance& getInstance() const;
 	const vk::Device& getDevice() const;
 	const vk::PhysicalDevice& getPhysicalDevice() const;

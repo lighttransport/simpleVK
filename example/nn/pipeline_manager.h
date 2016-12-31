@@ -9,13 +9,13 @@ namespace simpleVK
 {
 namespace neuralNetwork
 {
-class Device;
+class DeviceManager;
 class Resources;
 class Shader;
 
-class Pipeline
+class PipelineManager
 {
-	std::shared_ptr<Device> device_;
+	std::shared_ptr<DeviceManager> device_;
 	std::shared_ptr<Resources> resources_;
 	std::shared_ptr<Shader> sigmoidShader_;
 	std::shared_ptr<Shader> weightShader_;
@@ -44,12 +44,12 @@ class Pipeline
 		LayerSize outputSize,
 		vk::Pipeline& pipeline);
 public:
-	explicit Pipeline(
-		std::shared_ptr<Device> device, 
+	explicit PipelineManager(
+		std::shared_ptr<DeviceManager> device, 
 		std::shared_ptr<Resources> resources,
 		std::shared_ptr<Shader> sigmoidShader,
 		std::shared_ptr<Shader> weightShader);
-	~Pipeline();
+	~PipelineManager();
 
 	const vk::PipelineLayout& getSigmoidPipelineLayout() const;
 	const vk::PipelineLayout& getWeightPipelineLayout() const;

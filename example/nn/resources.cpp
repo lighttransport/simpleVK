@@ -1,6 +1,6 @@
 #include "resources.h"
 
-#include"device.h"
+#include"device_manager.h"
 
 
 void simpleVK::neuralNetwork::Resources::createBuffer(
@@ -64,7 +64,7 @@ void simpleVK::neuralNetwork::Resources::createSigmoidDescriptorSetLayout(vk::De
 	setLayoutBindings[1].setStageFlags(vk::ShaderStageFlagBits::eCompute);
 
 	vk::DescriptorSetLayoutCreateInfo createInfo;
-	createInfo.setBindingCount(setLayoutBindings.size());
+	createInfo.setBindingCount(static_cast<uint32_t>(setLayoutBindings.size()));
 	createInfo.setPBindings(setLayoutBindings.data());
 
 	setLayout = device_->getDevice().createDescriptorSetLayout(createInfo);
@@ -87,15 +87,15 @@ void simpleVK::neuralNetwork::Resources::createWeightDescriptorSetLayout(vk::Des
 	setLayoutBindings[2].setStageFlags(vk::ShaderStageFlagBits::eCompute);
 
 	vk::DescriptorSetLayoutCreateInfo createInfo;
-	createInfo.setBindingCount(setLayoutBindings.size());
+	createInfo.setBindingCount(static_cast<uint32_t>(setLayoutBindings.size()));
 	createInfo.setPBindings(setLayoutBindings.data());
 
 	setLayout = device_->getDevice().createDescriptorSetLayout(createInfo);
 }
 
 void simpleVK::neuralNetwork::Resources::createDescriptorPool(
-	size_t sigmoidSetsCount,
-	size_t weightSetsCount,
+	uint32_t sigmoidSetsCount,
+	uint32_t weightSetsCount,
 	vk::DescriptorPool& pool)
 {
 	std::vector<vk::DescriptorPoolSize> poolSizes(1);
@@ -105,7 +105,7 @@ void simpleVK::neuralNetwork::Resources::createDescriptorPool(
 	vk::DescriptorPoolCreateInfo createInfo;
 	createInfo.setMaxSets(sigmoidSetsCount + weightSetsCount);
 	createInfo.setPPoolSizes(poolSizes.data());
-	createInfo.setPoolSizeCount(poolSizes.size());
+	createInfo.setPoolSizeCount(static_cast<uint32_t>(poolSizes.size()));
 	createInfo.setFlags(vk::DescriptorPoolCreateFlagBits::eFreeDescriptorSet);
 
 	pool = device_->getDevice().createDescriptorPool(createInfo);
@@ -150,7 +150,7 @@ void simpleVK::neuralNetwork::Resources::writeDescriptorSet(
 }
 
 simpleVK::neuralNetwork::Resources::Resources(
-	std::shared_ptr<Device> device,
+	std::shared_ptr<DeviceManager> device,
 	const std::vector<LayerSize>& layerSizes) :
 	device_(device),
 	layers_(layerSizes.size()),
@@ -178,7 +178,7 @@ simpleVK::neuralNetwork::Resources::Resources(
 		createAndBindMemory(weights_[i].buffer, weights_[i].memory);
 	}
 
-	createDescriptorPool(sigmoidSets_.size(), weightSets_.size(), pool_);
+	createDescriptorPool(static_cast<uint32_t>(sigmoidSets_.size()), static_cast<uint32_t>(weightSets_.size()), pool_);
 
 	createSigmoidDescriptorSetLayout(sigmoidSetLayout_);
 	createWeightDescriptorSetLayout(weightSetLayout_);

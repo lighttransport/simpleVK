@@ -1,4 +1,4 @@
-#include"device.h"
+#include"device_manager.h"
 
 #include<iostream>
 #include<vector>
@@ -12,7 +12,7 @@ VKAPI_ATTR VkBool32 VKAPI_CALL debugCallback(VkDebugReportFlagsEXT flags, VkDebu
 	return VK_FALSE;
 }
 
-void simpleVK::neuralNetwork::Device::createInstance(vk::Instance& instance)
+void simpleVK::neuralNetwork::DeviceManager::createInstance(vk::Instance& instance)
 {
 	//init ApplicationInfo
 	vk::ApplicationInfo appInfo;
@@ -48,7 +48,7 @@ void simpleVK::neuralNetwork::Device::createInstance(vk::Instance& instance)
 	instance = vk::createInstance(instInfo);
 
 }
-void simpleVK::neuralNetwork::Device::createDebugReportCallback(
+void simpleVK::neuralNetwork::DeviceManager::createDebugReportCallback(
 	const vk::Instance & instance,
 	const PFN_vkDebugReportCallbackEXT & callback,
 	vk::DebugReportCallbackEXT& reportCallback)
@@ -76,7 +76,7 @@ void simpleVK::neuralNetwork::Device::createDebugReportCallback(
 		nullptr,
 		reinterpret_cast<VkDebugReportCallbackEXT*>(&reportCallback));
 }
-void simpleVK::neuralNetwork::Device::getPhysDevice(const vk::Instance& instance, vk::PhysicalDevice & physDevice)
+void simpleVK::neuralNetwork::DeviceManager::getPhysDevice(const vk::Instance& instance, vk::PhysicalDevice & physDevice)
 {
 	//get PhysicalDevices
 	std::vector<vk::PhysicalDevice> physDevices;
@@ -84,7 +84,7 @@ void simpleVK::neuralNetwork::Device::getPhysDevice(const vk::Instance& instance
 
 	physDevice = physDevices[0];
 }
-void simpleVK::neuralNetwork::Device::createDevice(const vk::PhysicalDevice & physDevice, vk::Device & device)
+void simpleVK::neuralNetwork::DeviceManager::createDevice(const vk::PhysicalDevice & physDevice, vk::Device & device)
 {
 	//create Devices
 
@@ -135,28 +135,28 @@ void simpleVK::neuralNetwork::Device::createDevice(const vk::PhysicalDevice & ph
 	physDevice.createDevice(&deviceInfo, nullptr, &device);
 	return;
 }
-simpleVK::neuralNetwork::Device::Device()
+simpleVK::neuralNetwork::DeviceManager::DeviceManager()
 {
 	createInstance(instance_);
 	createDebugReportCallback(instance_,debugCallback,reportCallback_);
 	getPhysDevice(instance_, physDevice_);
 	createDevice(physDevice_, device_);
 }
-simpleVK::neuralNetwork::Device::~Device()
+simpleVK::neuralNetwork::DeviceManager::~DeviceManager()
 {
 	device_.destroy();
 	_vkDestroyDebugReportCallbackEXT(instance_,reportCallback_,nullptr);
 	instance_.destroy();
 }
-const vk::Instance& simpleVK::neuralNetwork::Device::getInstance() const
+const vk::Instance& simpleVK::neuralNetwork::DeviceManager::getInstance() const
 {
 	return instance_;
 }
-const vk::Device& simpleVK::neuralNetwork::Device::getDevice() const
+const vk::Device& simpleVK::neuralNetwork::DeviceManager::getDevice() const
 {
 	return device_;
 }
-const vk::PhysicalDevice& simpleVK::neuralNetwork::Device::getPhysicalDevice() const
+const vk::PhysicalDevice& simpleVK::neuralNetwork::DeviceManager::getPhysicalDevice() const
 {
 	return physDevice_;
 }

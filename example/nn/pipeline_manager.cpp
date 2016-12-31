@@ -1,10 +1,10 @@
-#include "pipeline.h"
+#include "pipeline_manager.h"
 
-#include"device.h"
+#include"device_manager.h"
 #include"resources.h"
 #include"shader.h"
 
-void simpleVK::neuralNetwork::Pipeline::createPipelineLayout(
+void simpleVK::neuralNetwork::PipelineManager::createPipelineLayout(
 	const vk::DescriptorSetLayout& layout,
 	vk::PipelineLayout & pipelineLayout)
 {
@@ -19,7 +19,7 @@ void simpleVK::neuralNetwork::Pipeline::createPipelineLayout(
 	pipelineLayout = device_->getDevice().createPipelineLayout(layoutInfo);
 }
 
-void simpleVK::neuralNetwork::Pipeline::createSigmoidPipeline(
+void simpleVK::neuralNetwork::PipelineManager::createSigmoidPipeline(
 	const vk::PipelineLayout & pipelineLayout,
 	const vk::ShaderModule& shader,
 	simpleVK::neuralNetwork::LayerSize inputSize,
@@ -77,7 +77,7 @@ void simpleVK::neuralNetwork::Pipeline::createSigmoidPipeline(
 	pipeline = device_->getDevice().createComputePipeline(cache, createInfo);
 }
 
-void simpleVK::neuralNetwork::Pipeline::createWeightPipeline(
+void simpleVK::neuralNetwork::PipelineManager::createWeightPipeline(
 	const vk::PipelineLayout & pipelineLayout,
 	const vk::ShaderModule& shader,
 	simpleVK::neuralNetwork::LayerSize inputSize,
@@ -130,8 +130,8 @@ void simpleVK::neuralNetwork::Pipeline::createWeightPipeline(
 	pipeline = device_->getDevice().createComputePipeline(cache, createInfo);
 }
 
-simpleVK::neuralNetwork::Pipeline::Pipeline(
-	std::shared_ptr<Device> device,
+simpleVK::neuralNetwork::PipelineManager::PipelineManager(
+	std::shared_ptr<DeviceManager> device,
 	std::shared_ptr<Resources> resources,
 	std::shared_ptr<Shader> sigmoidShader,
 	std::shared_ptr<Shader> weightShader) :
@@ -170,7 +170,7 @@ simpleVK::neuralNetwork::Pipeline::Pipeline(
 
 }
 
-simpleVK::neuralNetwork::Pipeline::~Pipeline()
+simpleVK::neuralNetwork::PipelineManager::~PipelineManager()
 {
 	for (int i = 0; i < sigmoidPipelines_.size(); ++i)
 	{
@@ -184,32 +184,32 @@ simpleVK::neuralNetwork::Pipeline::~Pipeline()
 	device_->getDevice().destroyPipelineLayout(weightPipelineLayout_);
 }
 
-const vk::PipelineLayout & simpleVK::neuralNetwork::Pipeline::getSigmoidPipelineLayout() const
+const vk::PipelineLayout & simpleVK::neuralNetwork::PipelineManager::getSigmoidPipelineLayout() const
 {
 	return sigmoidPipelineLayout_;
 }
 
-const vk::PipelineLayout & simpleVK::neuralNetwork::Pipeline::getWeightPipelineLayout() const
+const vk::PipelineLayout & simpleVK::neuralNetwork::PipelineManager::getWeightPipelineLayout() const
 {
 	return weightPipelineLayout_;
 }
 
-size_t simpleVK::neuralNetwork::Pipeline::getSigmoidPipelineCount() const
+size_t simpleVK::neuralNetwork::PipelineManager::getSigmoidPipelineCount() const
 {
 	return sigmoidPipelines_.size();
 }
 
-size_t simpleVK::neuralNetwork::Pipeline::getWeightPipelineCount() const
+size_t simpleVK::neuralNetwork::PipelineManager::getWeightPipelineCount() const
 {
 	return weightPipelines_.size();
 }
 
-const vk::Pipeline & simpleVK::neuralNetwork::Pipeline::getSigmoidPipeline(size_t index) const
+const vk::Pipeline & simpleVK::neuralNetwork::PipelineManager::getSigmoidPipeline(size_t index) const
 {
 	return sigmoidPipelines_[index];
 }
 
-const vk::Pipeline & simpleVK::neuralNetwork::Pipeline::getWeightPipeline(size_t index) const
+const vk::Pipeline & simpleVK::neuralNetwork::PipelineManager::getWeightPipeline(size_t index) const
 {
 	return weightPipelines_[index];
 }

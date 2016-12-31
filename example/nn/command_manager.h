@@ -6,15 +6,15 @@ namespace simpleVK
 {
 namespace neuralNetwork
 {
-class Device;
+class DeviceManager;
 class Resources;
-class Pipeline;
+class PipelineManager;
 
-class CommandBuffer
+class CommandManager
 {
-	std::shared_ptr<Device> device_;
+	std::shared_ptr<DeviceManager> device_;
 	std::shared_ptr<Resources> resources_;
-	std::shared_ptr<Pipeline> pipeline_;
+	std::shared_ptr<PipelineManager> pipeline_;
 
 	vk::Queue queue_;
 	vk::CommandPool cmdPool_;
@@ -26,11 +26,11 @@ class CommandBuffer
 		const vk::CommandPool& cmdPool,
 		vk::CommandBuffer& cmdBuffer);
 public:
-	explicit CommandBuffer(
-		std::shared_ptr<Device> device,
+	explicit CommandManager(
+		std::shared_ptr<DeviceManager> device,
 		std::shared_ptr<Resources> resources,
-		std::shared_ptr<Pipeline> pipeline);
-	~CommandBuffer();
+		std::shared_ptr<PipelineManager> pipeline);
+	~CommandManager();
 
 	const vk::CommandBuffer& getCommandBuffers() const;
 

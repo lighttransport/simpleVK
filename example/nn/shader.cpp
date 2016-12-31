@@ -1,5 +1,5 @@
 #include"shader.h"
-#include"device.h"
+#include"device_manager.h"
 #include<cstdio>
 
 void simpleVK::neuralNetwork::Shader::readBinary(
@@ -36,7 +36,7 @@ void simpleVK::neuralNetwork::Shader::createShaderModule(
 }
 
 simpleVK::neuralNetwork::Shader::Shader(
-	std::shared_ptr<Device> device,
+	std::shared_ptr<DeviceManager> device,
 	std::string fileName) :
 	device_(device)
 {

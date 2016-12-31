@@ -1,15 +1,15 @@
-#include "command_buffer.h"
+#include "command_manager.h"
 
-#include"device.h"
+#include"device_manager.h"
 #include"resources.h"
-#include"pipeline.h"
+#include"pipeline_manager.h"
 
-void simpleVK::neuralNetwork::CommandBuffer::getQueue(vk::Queue & queue)
+void simpleVK::neuralNetwork::CommandManager::getQueue(vk::Queue & queue)
 {
 	queue = device_->getDevice().getQueue(0, 0);
 }
 
-void simpleVK::neuralNetwork::CommandBuffer::createCommandPool(vk::CommandPool & cmdPool)
+void simpleVK::neuralNetwork::CommandManager::createCommandPool(vk::CommandPool & cmdPool)
 {
 	//init CommandPoolCreateInfo
 	vk::CommandPoolCreateInfo cmdPoolInfo;
@@ -21,7 +21,7 @@ void simpleVK::neuralNetwork::CommandBuffer::createCommandPool(vk::CommandPool &
 
 }
 
-void simpleVK::neuralNetwork::CommandBuffer::createCommandBuffer(const vk::CommandPool & cmdPool, vk::CommandBuffer& cmdBuffer)
+void simpleVK::neuralNetwork::CommandManager::createCommandBuffer(const vk::CommandPool & cmdPool, vk::CommandBuffer& cmdBuffer)
 {
 	//init CommandBufferAllocateInfo
 	vk::CommandBufferAllocateInfo cmdBufAllocateInfo;
@@ -33,10 +33,10 @@ void simpleVK::neuralNetwork::CommandBuffer::createCommandBuffer(const vk::Comma
 	cmdBuffer = (device_->getDevice().allocateCommandBuffers(cmdBufAllocateInfo))[0];
 }
 
-simpleVK::neuralNetwork::CommandBuffer::CommandBuffer(
-	std::shared_ptr<Device> device,
+simpleVK::neuralNetwork::CommandManager::CommandManager(
+	std::shared_ptr<DeviceManager> device,
 	std::shared_ptr<Resources> resources,
-	std::shared_ptr<Pipeline> pipeline) :
+	std::shared_ptr<PipelineManager> pipeline) :
 	device_(device),
 	resources_(resources),
 	pipeline_(pipeline)
@@ -46,18 +46,18 @@ simpleVK::neuralNetwork::CommandBuffer::CommandBuffer(
 	createCommandBuffer(cmdPool_, cmdBuffer_);
 }
 
-simpleVK::neuralNetwork::CommandBuffer::~CommandBuffer()
+simpleVK::neuralNetwork::CommandManager::~CommandManager()
 {
 	device_->getDevice().freeCommandBuffers(cmdPool_, 1, &cmdBuffer_);
 	device_->getDevice().destroyCommandPool(cmdPool_);
 }
 
-const vk::CommandBuffer & simpleVK::neuralNetwork::CommandBuffer::getCommandBuffers() const
+const vk::CommandBuffer & simpleVK::neuralNetwork::CommandManager::getCommandBuffers() const
 {
 	return cmdBuffer_;
 }
 
-void simpleVK::neuralNetwork::CommandBuffer::dispach() const
+void simpleVK::neuralNetwork::CommandManager::dispach() const
 {
 	//init CommandBufferInheritanceInfo
 	vk::CommandBufferInheritanceInfo inheritanceInfo;

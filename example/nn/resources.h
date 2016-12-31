@@ -8,11 +8,11 @@ namespace neuralNetwork
 {
 struct LayerSize
 {
-	size_t x;
-	size_t y;
+	uint32_t x;
+	uint32_t y;
 };
 
-class Device;
+class DeviceManager;
 
 //Resources, create, read, and write resources (e.g.: Buffer, Image)
 class Resources
@@ -34,7 +34,7 @@ private:
 		vk::DeviceMemory memory;
 	};
 
-	std::shared_ptr<Device> device_;
+	std::shared_ptr<DeviceManager> device_;
 
 	std::vector<Layer> layers_;
 	std::vector<Weight> weights_;
@@ -54,8 +54,8 @@ private:
 	void createWeightDescriptorSetLayout(vk::DescriptorSetLayout& setLayout);
 
 	void createDescriptorPool(
-		size_t sigmoidSetsCount,
-		size_t weightSetsCount,
+		uint32_t sigmoidSetsCount,
+		uint32_t weightSetsCount,
 		vk::DescriptorPool& pool);
 	void createDescriptorSet(
 		const vk::DescriptorSetLayout& setLayout,
@@ -69,7 +69,7 @@ private:
 		uint32_t binding);
 public:
 	explicit Resources(
-		std::shared_ptr<Device> device,
+		std::shared_ptr<DeviceManager> device,
 		const std::vector<LayerSize>& layerSizes);
 	~Resources();
 

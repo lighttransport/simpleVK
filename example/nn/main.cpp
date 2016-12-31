@@ -1,10 +1,10 @@
 #include<iostream>
 #include<iomanip>
-#include"device.h"
+#include"device_manager.h"
 #include"resources.h"
 #include"shader.h"
-#include"pipeline.h"
-#include"command_buffer.h"
+#include"pipeline_manager.h"
+#include"command_manager.h"
 
 
 int main()
@@ -37,21 +37,21 @@ int main()
 		weight2[i] = 0.25;
 	}
 
-	auto device = std::make_shared<simpleVK::neuralNetwork::Device>();
+	auto device = std::make_shared<simpleVK::neuralNetwork::DeviceManager>();
 
 	auto resources = std::make_shared<simpleVK::neuralNetwork::Resources>(device, layerSizes);
 
 	auto sigmoidShader = std::make_shared<simpleVK::neuralNetwork::Shader>(device, "sigmoid.spv");
 	auto weightShader = std::make_shared<simpleVK::neuralNetwork::Shader>(device, "weight.spv");
 
-	auto pipeline = std::make_shared<simpleVK::neuralNetwork::Pipeline>(device, resources, sigmoidShader, weightShader);
+	auto pipeline = std::make_shared<simpleVK::neuralNetwork::PipelineManager>(device, resources, sigmoidShader, weightShader);
 
 	resources->writeInputBuffer(input);
 	resources->writeWeightBuffer(0, weight);
 	resources->writeWeightBuffer(1, weight2);
 
 	auto commandBuffer =
-		std::make_shared<simpleVK::neuralNetwork::CommandBuffer>(device, resources, pipeline);
+		std::make_shared<simpleVK::neuralNetwork::CommandManager>(device, resources, pipeline);
 
 	commandBuffer->dispach();
 
