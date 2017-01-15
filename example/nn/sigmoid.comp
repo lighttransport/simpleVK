@@ -22,6 +22,7 @@ uint outputIndex(uint x,uint y)
 
 void main()
 {	
-	output_value[outputIndex(gl_GlobalInvocationID.x,gl_GlobalInvocationID.y)] = 
+	uint dummy = gl_WorkGroupSize.x;
+	output_value[outputIndex(gl_GlobalInvocationID.x,gl_GlobalInvocationID.y)] =
 		(atan(input_value[inputIndex(gl_GlobalInvocationID.x,gl_GlobalInvocationID.y)]/2*gain)+1)/2;
 }

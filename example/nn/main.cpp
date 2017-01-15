@@ -13,14 +13,14 @@ int main()
 		{4,4},	//input layer
 		{2,2},	//output weight layer
 		{2,2},	//output sigmoid layer
-		{2,1},	//output weight layer
-		{2,1} };	//output sigmoid layer
+		{2,2},	//output weight layer
+		{2,2}};	//output sigmoid layer
 	std::vector<float> input(layerSizes.front().y*layerSizes.front().x);
 	std::vector<float> output(layerSizes.back().y*layerSizes.back().x);
 	std::vector<float> weight(
 		layerSizes[0].y * layerSizes[0].x *
 		layerSizes[1].y * layerSizes[1].x);
-	std::vector<float> weight2(
+		std::vector<float> weight2(
 		layerSizes[2].y * layerSizes[2].x *
 		layerSizes[3].y * layerSizes[3].x);
 
@@ -55,12 +55,11 @@ int main()
 
 	commandBuffer->dispach();
 
-	//resources->readLayerBuffer(2,output);
+	resources->readLayerBuffer(2,output);
 	resources->readOutputBuffer(output);
 
 	for (int i = 0; i < output.size(); ++i)
 	{
-		// std::cout << std::setw(10) << std::left << i << std::right << output[i] << std::endl;
-		std::cout << i << ":" << output[i] << std::endl;
+		 std::cout << std::setw(10) << std::left << i << std::right << output[i] << std::endl;
 	}
 }

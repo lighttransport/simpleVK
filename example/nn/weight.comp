@@ -40,6 +40,6 @@ void main()
 				input_value[inputIndex(x,y)];
 		}
 	}
+	uint dummy  = gl_WorkGroupSize.x;
 	output_value[outputIndex(gl_LocalInvocationID.x,gl_LocalInvocationID.y)] = result;
-	//output_value[outputIndex(gl_LocalInvocationID.x,gl_LocalInvocationID.y)] = gl_WorkGroupSize.x;
 }

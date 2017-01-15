@@ -17,3 +17,5 @@ Release
 *.spv
 *.ilk
 *.pdb
+
+Makefile
